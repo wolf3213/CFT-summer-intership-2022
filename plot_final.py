@@ -54,7 +54,7 @@ class arr(): #this class is used to store information about the name
 if not os.path.exists('mems'):
     os.mkdir('mems')
 #################
-
+#importing data
 nx,ny,nz,r,h,ph,_dx1,_dx2,_dx3,a,gam,Rin,Rout,hslope,R0,x1,x2,x3,float_type=hrms.csfn_gread('dumps')
 #r is radius values
 #ph is phi values
@@ -64,12 +64,13 @@ step = 0
 
 t,nstep,rho,ug,vu,B,pg,divb,uu,ud,bu,bd,bsq,ktot,rhor,beta,Lambda_sim,P_dump,T_dump,Hd,Qnu,Tau,Yee = hrms.csfn_dumpread("dump%03d"%step,gam,nx,ny,nz,float_type,"./dumps")  
 
-
+gd=hrms.gdet
 #print(nx) so ive checked and this are dimensions of grid
 #print(ny)
 #print(nz)
 
-
+#######################
+#preparing data
 r=np.array(r)
 h=np.array(h)
 rho=np.reshape(rho,(nx,ny)) #I dont understand why but without transporing doesnt work
@@ -82,6 +83,8 @@ Tau=np.reshape(Tau,(nx,ny)) #I dont understand why but without transporing doesn
 Tau=np.transpose(Tau)
 h=np.reshape(h,(nx,ny)) #I dont understand why but without transporing doesnt work
 h=np.transpose(h)
+gd=np.reshape(gd,(nx,ny))
+gd=np.transpose(gd)
 
 
 r0=[a[0,0] for a in r]
@@ -141,7 +144,6 @@ plt.pcolormesh(X,Y,Z.array)
 plt.colorbar()
 plt.axis([x_min, x_max, y_min, y_max]) #changes axis
 plt.title('plot of {} for step {}'.format(Z.name, step))
-#plt.show()
 
 fig.savefig('part_of_grid_{}_{}.png'.format(Z.name, step))
 plt.clf()
@@ -164,7 +166,6 @@ plt.contour(X,Y,Z.array)
 plt.colorbar()
 plt.axis([x_min, x_max, y_min, y_max]) #changes axis
 plt.title('plot of {} for step {}'.format(Z.name, step))
-#plt.show()
 fig.savefig('part_of_grid_{}_{}.png'.format(Z.name, step))
 plt.clf()
 #################
@@ -172,11 +173,11 @@ ZA=arr(Tau, "Tau")
 ZB=arr(rho, "rho")
 
 plt.contour(X,Y,ZA.array)
+plt.colorbar()
 plt.pcolormesh(X,Y,ZB.array,norm=matplotlib.colors.LogNorm())
 plt.colorbar()
 plt.axis([x_min, x_max, y_min, y_max]) #changes axis
 plt.title('plot of {} vs {} for step {}'.format(ZA.name,ZB.name, step))
-#plt.show()
 fig.savefig('part_of_grid_{}_{}_{}.png'.format(ZA.name,ZB.name, step))
 plt.clf()
 ##############
@@ -189,7 +190,7 @@ for a in rho:
 			break
 		dr=r0[i+1]-r0[i]
 		dh=h0[j+1]-h0[j]
-		mass=mass+rhov*r0[i]**2*L_UNIT**3*math.sin(h0[j])*dr*dh
+		mass=mass+rhov*r0[i]**2*L_UNIT**3*math.sin(h0[j])*dr*dh*gd[i,j]
 		j=j+1
 	i=i+1
 	j=0
@@ -202,12 +203,21 @@ print('{} kg'.format(masskg))
 print('{} MSUN'.format(masssolar))
 ##########################################################################################################################################################################
 
+#################
+#importing data
 nx,ny,nz,r,h,ph,_dx1,_dx2,_dx3,a,gam,Rin,Rout,hslope,R0,x1,x2,x3,float_type=hrms.csfn_gread('dumps')
+#r is radius values
+#ph is phi values
+#h is theta values
+
 step = 64
 
 t,nstep,rho,ug,vu,B,pg,divb,uu,ud,bu,bd,bsq,ktot,rhor,beta,Lambda_sim,P_dump,T_dump,Hd,Qnu,Tau,Yee = hrms.csfn_dumpread("dump%03d"%step,gam,nx,ny,nz,float_type,"./dumps")  
 
+gd=hrms.gdet
 
+#######################
+#preparing data
 r=np.array(r)
 h=np.array(h)
 rho=np.reshape(rho,(nx,ny)) #I dont understand why but without transporing doesnt work
@@ -220,6 +230,8 @@ Tau=np.reshape(Tau,(nx,ny)) #I dont understand why but without transporing doesn
 Tau=np.transpose(Tau)
 h=np.reshape(h,(nx,ny)) #I dont understand why but without transporing doesnt work
 h=np.transpose(h)
+gd=np.reshape(gd,(nx,ny))
+gd=np.transpose(gd)
 
 
 r0=[a[0,0] for a in r]
@@ -301,6 +313,7 @@ ZA=arr(Tau, "Tau")
 ZB=arr(rho, "rho")
 
 plt.contour(X,Y,ZA.array)
+plt.colorbar()
 plt.pcolormesh(X,Y,ZB.array,norm=matplotlib.colors.LogNorm())
 plt.colorbar()
 plt.axis([x_min, x_max, y_min, y_max]) #changes axis
@@ -318,7 +331,7 @@ for a in rho:
 			break
 		dr=r0[i+1]-r0[i]
 		dh=h0[j+1]-h0[j]
-		mass=mass+rhov*r0[i]**2*L_UNIT**3*math.sin(h0[j])*dr*dh
+		mass=mass+rhov*r0[i]**2*L_UNIT**3*math.sin(h0[j])*dr*dh*gd[i,j]
 		j=j+1
 	i=i+1
 	j=0
