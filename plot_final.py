@@ -98,13 +98,15 @@ r0=r0
 
 
 
-
 radius_matrix, theta_matrix = np.meshgrid(r0,h0)
 #print(np.meshgrid(r0,h0)) #this makes grid in and radius and angle
 
 X = radius_matrix * np.cos(theta_matrix) #this converts to cartesian cordinates
 Y = radius_matrix * np.sin(theta_matrix)
 fig = plt.figure()
+
+#plt.plot(X,Y,marker="o",markersize='1')
+#plt.show()
 #############
 
 #sizes of pictures
@@ -190,7 +192,7 @@ for a in rho:
 			break
 		dr=r0[i+1]-r0[i]
 		dh=h0[j+1]-h0[j]
-		mass=mass+rhov*r0[i]**2*L_UNIT**3*math.sin(h0[j])*dr*dh*gd[i,j]
+		mass=mass+rhov*L_UNIT**3*_dx1*_dx2*gd[i,j] #mass=mass+rhov*L_UNIT**3*dr*dh*gd[i,j]
 		j=j+1
 	i=i+1
 	j=0
@@ -321,17 +323,18 @@ plt.title('plot of {} vs {} for step {}'.format(ZA.name,ZB.name, step))
 #plt.show()
 fig.savefig('part_of_grid_{}_{}_{}.png'.format(ZA.name,ZB.name, step))
 plt.clf()
-###############
+###############]
 mass=0
 i=0
 j=0
 for a in rho:
+	#print(np.size(a))
 	for rhov in a:
 		if j==299:#why doesnt work with 300?
 			break
 		dr=r0[i+1]-r0[i]
 		dh=h0[j+1]-h0[j]
-		mass=mass+rhov*r0[i]**2*L_UNIT**3*math.sin(h0[j])*dr*dh*gd[i,j]
+		mass=mass+rhov*L_UNIT**3*_dx1*_dx2*gd[i,j] #mass=mass+rhov*L_UNIT**3*dr*dh*gd[i,j]
 		j=j+1
 	i=i+1
 	j=0
