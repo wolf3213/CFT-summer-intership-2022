@@ -334,7 +334,7 @@ for a in rho:
 			break
 		dr=r0[i+1]-r0[i]
 		dh=h0[j+1]-h0[j]
-		mass=mass+rhov*L_UNIT**3*_dx1*_dx2*gd[i,j] #mass=mass+rhov*L_UNIT**3*dr*dh*gd[i,j]
+		mass=mass+rhov*L_UNIT**3*_dx1*_dx2*gd[i,j] #mass=mass+rhov*L_UNIT**3*dr*dh*gd[i,j] should be there [j,i]????????/
 		j=j+1
 	i=i+1
 	j=0
