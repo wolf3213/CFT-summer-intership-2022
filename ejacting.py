@@ -58,13 +58,13 @@ if not os.path.exists('mems'):
     os.mkdir('mems')
 #################
 #importing data
-name_of_file='M1.0-a0.9-dumps'
-nx,ny,nz,r,h,ph,_dx1,_dx2,_dx3,a,gam,Rin,Rout,hslope,R0,x1,x2,x3,float_type=hrms.csfn_gread('M1.0-a0.9-dumps')
+name_of_file='M1.0-a0.6-dumps'
+nx,ny,nz,r,h,ph,_dx1,_dx2,_dx3,a,gam,Rin,Rout,hslope,R0,x1,x2,x3,float_type=hrms.csfn_gread(name_of_file)
 #r is radius values
 #ph is phi values
 #h is theta values
 
-step = 128
+step = 64
 
 t,nstep,rho,ug,vu,B,pg,divb,uu,ud,bu,bd,bsq,ktot,rhor,beta,Lambda_sim,P_dump,T_dump,Hd,Qnu,Tau,Yee = hrms.csfn_dumpread("dump%03d"%step,gam,nx,ny,nz,float_type,name_of_file)  
 
@@ -105,7 +105,6 @@ h0=np.array(h0)
 r0=r0
 #print(h0)
 #print(r0)
-
 
 
 radius_matrix, theta_matrix = np.meshgrid(r0,h0)
@@ -149,7 +148,28 @@ fig.savefig('part_of_grid_{}_{}.png'.format(Z.name, step))
 plt.clf()
 
 ##############
-print("for the file {} geodesic criterion".format(name_of_file))
+mass=0
+i=0#radial cordinate
+j=0#theta cordinate
+for a in rho:
+	for rhov in a:
+		if j==299:#why doesnt work with 300?
+			break
+		mass=mass+rhov*L_UNIT**3*_dx1*_dx2*gd[i,j] #mass=mass+rhov*L_UNIT**3*dr*dh*gd[i,j]
+		j=j+1
+	i=i+1
+	j=0
+	if i==384:	
+		break
+mass=mass*2*math.pi
+masskg=mass/1000
+masssolar=mass/MSUN
+print('{} kg'.format(masskg))
+print('{} MSUN'.format(masssolar))
+with open('wyniki.txt', 'a') as f:
+	print("for the file {} whole disk mass:".format(name_of_file),file=f)
+	print('{} MSUN'.format(masssolar),file=f)
+##############
 mass=0
 i=0#radial cordinate
 j=0#theta cordinate
@@ -169,10 +189,12 @@ masskg=mass/1000
 masssolar=mass/MSUN
 print('{} kg'.format(masskg))
 print('{} MSUN'.format(masssolar))
+with open('wyniki.txt', 'a') as f:
+	print("for the file {} geodesic criterion:".format(name_of_file),file=f)
+	print('{} MSUN'.format(masssolar),file=f)
 ##############
 
 rho_code=rho/RHO_UNIT
-print("for the file {} Bernoulli criterion version 1".format(name_of_file))
 mass=0
 i=0
 j=0
@@ -194,10 +216,13 @@ masskg=mass/1000
 masssolar=mass/MSUN
 print('{} kg'.format(masskg))
 print('{} MSUN'.format(masssolar))
+with open('wyniki.txt', 'a') as f:
+	print("for the file {} Bernoulli criterion version 1:".format(name_of_file),file=f)
+	print("{} MSUN\n".format(masssolar),file=f)
+
 ##############
 
 rho_code=rho/RHO_UNIT
-print("for the file {} Bernoulli criterion version 1".format(name_of_file))
 mass=0
 i=0
 j=0
@@ -207,7 +232,7 @@ for a in rho:
 			break
 		dr=r0[i+1]-r0[i]
 		dh=h0[j+1]-h0[j]
-		if ud[0,i,j]*(1+ug[i,j]/rhov+pg[i,j]/rho_code[j,i])<-1 and r0[i]>80:
+		if ud[0,i,j]*(1+ug[i,j]/rhov+pg[i,j]/rho_code[j,i])*(0.9968 + 0.0085*Yee[j,i])<-1 and r0[i]>80:
 			mass=mass+rhov*L_UNIT**3*_dx1*_dx2*gd[i,j] #mass=mass+rhov*L_UNIT**3*dr*dh*gd[i,j] should be there [j,i]????????/
 		j=j+1
 	i=i+1
@@ -219,6 +244,9 @@ masskg=mass/1000
 masssolar=mass/MSUN
 print('{} kg'.format(masskg))
 print('{} MSUN'.format(masssolar))
+with open('wyniki.txt', 'a') as f:
+	print("for the file {} Bernoulli criterion version 2:".format(name_of_file),file=f)
+	print("{} MSUN".format(masssolar),file=f)
 ##########################################################################################################################################################################
 
 
