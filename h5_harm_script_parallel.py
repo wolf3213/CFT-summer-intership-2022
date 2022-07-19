@@ -886,42 +886,42 @@ def csfn_dumpread(dump,ggam,nnx,nny,nnz,fl_type,dump_directory=None,mem_director
         Yee[:] = f1['Yee'][()];
 
         # adjusting scales and units:
-        GNEWT = 6.6742867e-8
-        MSUN = 1.9892e33
-        YEAR = 365.25 * 24. * 3600.
-        KBOL = 1.3e-16
-        CL = 2.99792458e10
-        MP = 1.67262163783e-24
-        ME = 9.10956e-28
-        MN = 1.67492729e-24
-        MHE = 6.6465e-24        #2p+2e+binding energy
-        EE = 4.80320680e-10
-        SIGMATH = 6.65248e-25
-        SIGMASBOL = 5.67051e-5
-        MAV = (MP + MN + 2. * ME + MHE) / 5.    # avrage particle mass
+        #GNEWT = 6.6742867e-8
+        #MSUN = 1.9892e33
+        #YEAR = 365.25 * 24. * 3600.
+        #KBOL = 1.3e-16
+        #CL = 2.99792458e10
+        #MP = 1.67262163783e-24
+        #ME = 9.10956e-28
+        #MN = 1.67492729e-24
+        #MHE = 6.6465e-24        #2p+2e+binding energy
+        #EE = 4.80320680e-10
+        #SIGMATH = 6.65248e-25
+        #SIGMASBOL = 5.67051e-5
+        #MAV = (MP + MN + 2. * ME + MHE) / 5.    # avrage particle mass
 
         # set mass of the black hole- sets the lenght scale, and the initial mass of the disk
-        M_BLH = 2.0 * MSUN
+        #M_BLH = 1.0 * MSUN
 
         # fundamental units
-        L_UNIT = GNEWT * M_BLH / (CL * CL)
-        RHO_SCALE = 1.5e-5
+        #L_UNIT = GNEWT * M_BLH / (CL * CL)
+        #RHO_SCALE = 1.5e-5
 
-        M_UNIT = RHO_SCALE * MSUN
-        T_UNIT = L_UNIT / CL
+        #M_UNIT = RHO_SCALE * MSUN
+        #T_UNIT = L_UNIT / CL
         
-        USCALE = 1.0;
+        #USCALE = 1.0;
 
         # scaling ratio
-        RHO_UNIT = M_UNIT / (L_UNIT * L_UNIT * L_UNIT)
-        U_UNIT = RHO_UNIT * CL * CL * USCALE
-        P_UNIT = U_UNIT
-        SIM_UNIT = RHO_UNIT * CL * CL * CL / L_UNIT
+        #RHO_UNIT = M_UNIT / (L_UNIT * L_UNIT * L_UNIT)
+        #U_UNIT = RHO_UNIT * CL * CL * USCALE
+        #P_UNIT = U_UNIT
+        #SIM_UNIT = RHO_UNIT * CL * CL * CL / L_UNIT
 
         # converting units:
-        rho = rho*RHO_UNIT
-        Lambda_sim = Lambda_sim*SIM_UNIT
-        Qnu = Qnu*SIM_UNIT        
+        #rho = rho*RHO_UNIT
+        #Lambda_sim = Lambda_sim*SIM_UNIT
+        #Qnu = Qnu*SIM_UNIT        
         
     else:
         print()

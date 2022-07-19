@@ -2,7 +2,7 @@ import numpy as np
 
 import matplotlib
 import matplotlib.pyplot as plt
-
+import scipy.integrate as scp_int
 import h5py as hdf
 import h5_harm_script_parallel as hrms
 import time
@@ -183,26 +183,44 @@ plt.title('plot of {} vs {} for step {}'.format(ZA.name,ZB.name, step))
 fig.savefig('part_of_grid_{}_{}_{}.png'.format(ZA.name,ZB.name, step))
 plt.clf()
 ##############
+print("this is mythod") 
 mass=0
-i=0
-j=0
-for a in rho:
-	for rhov in a:
-		if j==299:#why doesnt work with 300?
-			break
-		dr=r0[i+1]-r0[i]
-		dh=h0[j+1]-h0[j]
-		mass=mass+rhov*L_UNIT**3*_dx1*_dx2*gd[i,j] #mass=mass+rhov*L_UNIT**3*dr*dh*gd[i,j]
-		j=j+1
-	i=i+1
-	j=0
-	if i==384:	
-		break
+i=0#radial cordinate
+j=0#theta cordinate
+for i in  np.arange(nx):
+	for j in np.arange(ny):
+		mass=mass+rho[j,i]*L_UNIT**3*_dx1*_dx2*gd[j,i] #mass=mass+rhov*L_UNIT**3*dr*dh*gd[i,j]
 mass=mass*2*math.pi
 masskg=mass/1000
 masssolar=mass/MSUN
 print('{} kg'.format(masskg))
 print('{} MSUN'.format(masssolar))
+
+mass=mass*2*math.pi
+masskg=mass/1000
+masssolar=mass/MSUN
+print('{} kg'.format(masskg))
+print('{} MSUN'.format(masssolar))
+############
+print("this is simpson method")
+Rho=np.transpose(rho) 
+Rho = rho[:,:]
+Gdet=np.transpose(gd)
+Gdet = gd[:,:]
+mass=0
+f_integrand_r = Rho*Gdet*2*np.pi
+vol_r = scp_int.simps(f_integrand_r,dx=_dx1,axis=0)
+        
+f_integrand_theta = vol_r
+vol_theta = scp_int.simps(f_integrand_theta,dx=_dx2,axis=0)
+ 	
+mass = vol_theta
+mass = mass*L_UNIT*L_UNIT*L_UNIT
+masskg=mass/1000
+masssolar=mass/MSUN
+print('{} kg'.format(masskg))
+print('{} MSUN'.format(masssolar))
+
 ##########################################################################################################################################################################
 
 #################
@@ -325,27 +343,42 @@ fig.savefig('part_of_grid_{}_{}_{}.png'.format(ZA.name,ZB.name, step))
 plt.clf()
 ###############]
 mass=0
-i=0
-j=0
-for a in rho:
-	#print(np.size(a))
-	for rhov in a:
-		if j==299:#why doesnt work with 300?
-			break
-		dr=r0[i+1]-r0[i]
-		dh=h0[j+1]-h0[j]
-		mass=mass+rhov*L_UNIT**3*_dx1*_dx2*gd[i,j] #mass=mass+rhov*L_UNIT**3*dr*dh*gd[i,j] should be there [j,i]????????/
-		j=j+1
-	i=i+1
-	j=0
-	if i==384:	
-		break
+i=0#radial cordinate
+j=0#theta cordinate
+for i in  np.arange(nx):
+	for j in np.arange(ny):
+		mass=mass+rho[j,i]*L_UNIT**3*_dx1*_dx2*gd[j,i] #mass=mass+rhov*L_UNIT**3*dr*dh*gd[i,j]
+
 mass=mass*2*math.pi
 masskg=mass/1000
 masssolar=mass/MSUN
 print('{} kg'.format(masskg))
 print('{} MSUN'.format(masssolar))
 
+mass=mass*2*math.pi
+masskg=mass/1000
+masssolar=mass/MSUN
+print('{} kg'.format(masskg))
+print('{} MSUN'.format(masssolar))
+############
+print("this is simpson method")
+Rho=np.transpose(rho) 
+Rho = rho[:,:]
+Gdet=np.transpose(gd)
+Gdet = gd[:,:]
+mass=0
+f_integrand_r = Rho*Gdet*2*np.pi
+vol_r = scp_int.simps(f_integrand_r,dx=_dx1,axis=0)
+        
+f_integrand_theta = vol_r
+vol_theta = scp_int.simps(f_integrand_theta,dx=_dx2,axis=0)
+ 	
+mass = vol_theta
+mass = mass*L_UNIT*L_UNIT*L_UNIT
+masskg=mass/1000
+masssolar=mass/MSUN
+print('{} kg'.format(masskg))
+print('{} MSUN'.format(masssolar))
 
 
 
