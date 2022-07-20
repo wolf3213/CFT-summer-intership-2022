@@ -19,6 +19,9 @@ import re
 # read https://stackoverflow.com/questions/28926813/create-a-meshgrid-for-polar-coordinates
 # read  https://stackoverflow.com/questions/57246146/logarithmic-colorbar
 
+##### this should clear file every time
+with open('wyniki.txt', 'w') as f:
+	print("clearing",file=f)
 
 #################
 name_of_file='M1.0-a0.6-dumps'
@@ -174,6 +177,7 @@ with open('wyniki.txt', 'a') as f:
 mass=0
 i=0#radial cordinate
 j=0#theta cordinate
+Mask = np.zeros_like(Rho)
 for i in  np.arange(nx):
 	for j in np.arange(ny):
 		if -ud[0][i,j,0]>1:
@@ -187,7 +191,7 @@ vol_theta = scp_int.simps(f_integrand_theta,dx=_dx2,axis=0)
  	
 mass = vol_theta
 mass = mass*L_UNIT*L_UNIT*L_UNIT	
-mass=mass*2*math.pi
+
 masskg=mass/1000
 masssolar=mass/MSUN
 print('{} kg'.format(masskg))
@@ -199,6 +203,7 @@ with open('wyniki.txt', 'a') as f:
 mass=0
 i=0#radial cordinate
 j=0#theta cordinate
+Mask = np.zeros_like(Rho)
 for i in  np.arange(nx):
 	for j in np.arange(ny):
 		if -ud[0][i,j,0]>1 and r0[i]>80:
@@ -228,6 +233,7 @@ with open('wyniki.txt', 'a') as f:
 mass=0
 i=0
 j=0
+Mask = np.zeros_like(Rho)
 for i in  np.arange(nx):
 	for j in np.arange(ny):
 		if ud[0][i,j,0]*(1+ug[i,j]/rho[i,j]+pg[i,j]/rho_code[i,j])<-1:
@@ -256,6 +262,7 @@ with open('wyniki.txt', 'a') as f:
 mass=0
 i=0
 j=0
+Mask = np.zeros_like(Rho)
 for i in  np.arange(nx):
 	for j in np.arange(ny):
 		if ud[0][i,j,0]*(1+ug[i,j]/rho[i,j]+pg[i,j]/rho_code[i,j])<-1 and r0[i]>80:
@@ -284,6 +291,7 @@ mass=0
 
 i=0
 j=0
+Mask = np.zeros_like(Rho)
 for i in  np.arange(nx):
 	for j in np.arange(ny):
 		if ud[0][i,j,0]*(1+ug[i,j]/rho[i,j]+pg[i,j]/rho_code[i,j])*(0.9968 + 0.0085*Yee[i,j])<-1:
@@ -310,6 +318,7 @@ mass=0
 
 i=0
 j=0
+Mask = np.zeros_like(Rho)
 for i in  np.arange(nx):
 	for j in np.arange(ny):
 		if ud[0][i,j,0]*(1+ug[i,j]/rho[i,j]+pg[i,j]/rho_code[i,j])*(0.9968 + 0.0085*Yee[i,j])<-1 and r0[i]>80:
@@ -815,7 +824,7 @@ vol_theta = scp_int.simps(f_integrand_theta,dx=_dx2,axis=0)
  	
 mass = vol_theta
 mass = mass*L_UNIT*L_UNIT*L_UNIT	
-mass=mass*2*math.pi
+
 masskg=mass/1000
 masssolar=mass/MSUN
 print('{} kg'.format(masskg))
@@ -1128,7 +1137,7 @@ vol_theta = scp_int.simps(f_integrand_theta,dx=_dx2,axis=0)
  	
 mass = vol_theta
 mass = mass*L_UNIT*L_UNIT*L_UNIT	
-mass=mass*2*math.pi
+
 masskg=mass/1000
 masssolar=mass/MSUN
 print('{} kg'.format(masskg))
