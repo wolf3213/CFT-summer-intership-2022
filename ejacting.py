@@ -21,7 +21,7 @@ import re
 
 ##### this should clear file every time
 with open('wyniki.txt', 'w') as f:
-	print("clearing",file=f)
+	print("the file was cleared before last usage\n ",file=f)
 
 #################
 name_of_file='M1.0-a0.6-dumps'
@@ -129,6 +129,7 @@ rho_code=rho/RHO_UNIT
 rho_code=np.transpose(rho_code)
 
 r0=[a[0,0] for a in r]
+#print(r0)
 h0=[a[0] for a in h]
 r0=np.array(r0)
 h0=np.array(h0)
@@ -203,10 +204,12 @@ with open('wyniki.txt', 'a') as f:
 mass=0
 i=0#radial cordinate
 j=0#theta cordinate
+
 Mask = np.zeros_like(Rho)
+#print(Mask)
 for i in  np.arange(nx):
 	for j in np.arange(ny):
-		if -ud[0][i,j,0]>1 and r0[i]>80:
+		if (-ud[0][i,j,0]>1 and r0[i]>80):
 			Mask[i][j]=1	
 
 mass=0
@@ -225,7 +228,7 @@ masssolar=mass/MSUN
 print('{} kg'.format(masskg))
 print('{} MSUN'.format(masssolar))
 with open('wyniki.txt', 'a') as f:
-	print("for the file {} geodesic criterion && r>80:".format(name_of_file),file=f)
+	print("for the file {} geodesic criterion && r>100:".format(name_of_file),file=f)
 	print('{} MSUN'.format(masssolar),file=f)
 ##############
 
@@ -282,7 +285,7 @@ masssolar=mass/MSUN
 print('{} kg'.format(masskg))
 print('{} MSUN'.format(masssolar))
 with open('wyniki.txt', 'a') as f:
-	print("for the file {} Bernoulli criterion version 1&& r>80:".format(name_of_file),file=f)
+	print("for the file {} Bernoulli criterion version 1&& r>100:".format(name_of_file),file=f)
 	print("{} MSUN\n".format(masssolar),file=f)
 
 ##############
@@ -338,7 +341,7 @@ masssolar=mass/MSUN
 print('{} kg'.format(masskg))
 print('{} MSUN'.format(masssolar))
 with open('wyniki.txt', 'a') as f:
-	print("for the file {} Bernoulli criterion version 2&& r>80:".format(name_of_file),file=f)
+	print("for the file {} Bernoulli criterion version 2&& r>100:".format(name_of_file),file=f)
 	print("{} MSUN\n".format(masssolar),file=f)
 	print("#######################\n",file=f)
 ##########################################################################################################################################################################
@@ -498,6 +501,7 @@ with open('wyniki.txt', 'a') as f:
 mass=0
 i=0#radial cordinate
 j=0#theta cordinate
+Mask = np.zeros_like(Rho)
 for i in  np.arange(nx):
 	for j in np.arange(ny):
 		if -ud[0][i,j,0]>1:
@@ -511,7 +515,7 @@ vol_theta = scp_int.simps(f_integrand_theta,dx=_dx2,axis=0)
  	
 mass = vol_theta
 mass = mass*L_UNIT*L_UNIT*L_UNIT	
-mass=mass*2*math.pi
+
 masskg=mass/1000
 masssolar=mass/MSUN
 print('{} kg'.format(masskg))
@@ -523,9 +527,12 @@ with open('wyniki.txt', 'a') as f:
 mass=0
 i=0#radial cordinate
 j=0#theta cordinate
+
+Mask = np.zeros_like(Rho)
+#print(Mask)
 for i in  np.arange(nx):
 	for j in np.arange(ny):
-		if -ud[0][i,j,0]>1 and r0[i]>80:
+		if (-ud[0][i,j,0]>1 and r0[i]>80):
 			Mask[i][j]=1	
 
 mass=0
@@ -544,7 +551,7 @@ masssolar=mass/MSUN
 print('{} kg'.format(masskg))
 print('{} MSUN'.format(masssolar))
 with open('wyniki.txt', 'a') as f:
-	print("for the file {} geodesic criterion && r>80:".format(name_of_file),file=f)
+	print("for the file {} geodesic criterion && r>100:".format(name_of_file),file=f)
 	print('{} MSUN'.format(masssolar),file=f)
 ##############
 
@@ -552,6 +559,7 @@ with open('wyniki.txt', 'a') as f:
 mass=0
 i=0
 j=0
+Mask = np.zeros_like(Rho)
 for i in  np.arange(nx):
 	for j in np.arange(ny):
 		if ud[0][i,j,0]*(1+ug[i,j]/rho[i,j]+pg[i,j]/rho_code[i,j])<-1:
@@ -580,6 +588,7 @@ with open('wyniki.txt', 'a') as f:
 mass=0
 i=0
 j=0
+Mask = np.zeros_like(Rho)
 for i in  np.arange(nx):
 	for j in np.arange(ny):
 		if ud[0][i,j,0]*(1+ug[i,j]/rho[i,j]+pg[i,j]/rho_code[i,j])<-1 and r0[i]>80:
@@ -599,7 +608,7 @@ masssolar=mass/MSUN
 print('{} kg'.format(masskg))
 print('{} MSUN'.format(masssolar))
 with open('wyniki.txt', 'a') as f:
-	print("for the file {} Bernoulli criterion version 1&& r>80:".format(name_of_file),file=f)
+	print("for the file {} Bernoulli criterion version 1&& r>100:".format(name_of_file),file=f)
 	print("{} MSUN\n".format(masssolar),file=f)
 
 ##############
@@ -608,6 +617,7 @@ mass=0
 
 i=0
 j=0
+Mask = np.zeros_like(Rho)
 for i in  np.arange(nx):
 	for j in np.arange(ny):
 		if ud[0][i,j,0]*(1+ug[i,j]/rho[i,j]+pg[i,j]/rho_code[i,j])*(0.9968 + 0.0085*Yee[i,j])<-1:
@@ -634,6 +644,7 @@ mass=0
 
 i=0
 j=0
+Mask = np.zeros_like(Rho)
 for i in  np.arange(nx):
 	for j in np.arange(ny):
 		if ud[0][i,j,0]*(1+ug[i,j]/rho[i,j]+pg[i,j]/rho_code[i,j])*(0.9968 + 0.0085*Yee[i,j])<-1 and r0[i]>80:
@@ -653,7 +664,7 @@ masssolar=mass/MSUN
 print('{} kg'.format(masskg))
 print('{} MSUN'.format(masssolar))
 with open('wyniki.txt', 'a') as f:
-	print("for the file {} Bernoulli criterion version 2&& r>80:".format(name_of_file),file=f)
+	print("for the file {} Bernoulli criterion version 2&& r>100:".format(name_of_file),file=f)
 	print("{} MSUN\n".format(masssolar),file=f)
 	print("#######################\n",file=f)
 ##########################################################################################################################################################################
@@ -778,8 +789,6 @@ radius_matrix, theta_matrix = np.meshgrid(r0,h0)
 ##############
 
 
-##############
-
 #mass of whole disk:
 Rho = rho[:,:]
 Rho=np.transpose(Rho)
@@ -811,6 +820,7 @@ with open('wyniki.txt', 'a') as f:
 mass=0
 i=0#radial cordinate
 j=0#theta cordinate
+Mask = np.zeros_like(Rho)
 for i in  np.arange(nx):
 	for j in np.arange(ny):
 		if -ud[0][i,j,0]>1:
@@ -836,9 +846,12 @@ with open('wyniki.txt', 'a') as f:
 mass=0
 i=0#radial cordinate
 j=0#theta cordinate
+
+Mask = np.zeros_like(Rho)
+#print(Mask)
 for i in  np.arange(nx):
 	for j in np.arange(ny):
-		if -ud[0][i,j,0]>1 and r0[i]>80:
+		if (-ud[0][i,j,0]>1 and r0[i]>80):
 			Mask[i][j]=1	
 
 mass=0
@@ -857,7 +870,7 @@ masssolar=mass/MSUN
 print('{} kg'.format(masskg))
 print('{} MSUN'.format(masssolar))
 with open('wyniki.txt', 'a') as f:
-	print("for the file {} geodesic criterion && r>80:".format(name_of_file),file=f)
+	print("for the file {} geodesic criterion && r>100:".format(name_of_file),file=f)
 	print('{} MSUN'.format(masssolar),file=f)
 ##############
 
@@ -865,6 +878,7 @@ with open('wyniki.txt', 'a') as f:
 mass=0
 i=0
 j=0
+Mask = np.zeros_like(Rho)
 for i in  np.arange(nx):
 	for j in np.arange(ny):
 		if ud[0][i,j,0]*(1+ug[i,j]/rho[i,j]+pg[i,j]/rho_code[i,j])<-1:
@@ -893,6 +907,7 @@ with open('wyniki.txt', 'a') as f:
 mass=0
 i=0
 j=0
+Mask = np.zeros_like(Rho)
 for i in  np.arange(nx):
 	for j in np.arange(ny):
 		if ud[0][i,j,0]*(1+ug[i,j]/rho[i,j]+pg[i,j]/rho_code[i,j])<-1 and r0[i]>80:
@@ -912,7 +927,7 @@ masssolar=mass/MSUN
 print('{} kg'.format(masskg))
 print('{} MSUN'.format(masssolar))
 with open('wyniki.txt', 'a') as f:
-	print("for the file {} Bernoulli criterion version 1&& r>80:".format(name_of_file),file=f)
+	print("for the file {} Bernoulli criterion version 1&& r>100:".format(name_of_file),file=f)
 	print("{} MSUN\n".format(masssolar),file=f)
 
 ##############
@@ -921,6 +936,7 @@ mass=0
 
 i=0
 j=0
+Mask = np.zeros_like(Rho)
 for i in  np.arange(nx):
 	for j in np.arange(ny):
 		if ud[0][i,j,0]*(1+ug[i,j]/rho[i,j]+pg[i,j]/rho_code[i,j])*(0.9968 + 0.0085*Yee[i,j])<-1:
@@ -947,6 +963,7 @@ mass=0
 
 i=0
 j=0
+Mask = np.zeros_like(Rho)
 for i in  np.arange(nx):
 	for j in np.arange(ny):
 		if ud[0][i,j,0]*(1+ug[i,j]/rho[i,j]+pg[i,j]/rho_code[i,j])*(0.9968 + 0.0085*Yee[i,j])<-1 and r0[i]>80:
@@ -966,7 +983,7 @@ masssolar=mass/MSUN
 print('{} kg'.format(masskg))
 print('{} MSUN'.format(masssolar))
 with open('wyniki.txt', 'a') as f:
-	print("for the file {} Bernoulli criterion version 2&& r>80:".format(name_of_file),file=f)
+	print("for the file {} Bernoulli criterion version 2&& r>100:".format(name_of_file),file=f)
 	print("{} MSUN\n".format(masssolar),file=f)
 	print("#######################\n",file=f)
 ##########################################################################################################################################################################
@@ -1124,6 +1141,7 @@ with open('wyniki.txt', 'a') as f:
 mass=0
 i=0#radial cordinate
 j=0#theta cordinate
+Mask = np.zeros_like(Rho)
 for i in  np.arange(nx):
 	for j in np.arange(ny):
 		if -ud[0][i,j,0]>1:
@@ -1149,9 +1167,12 @@ with open('wyniki.txt', 'a') as f:
 mass=0
 i=0#radial cordinate
 j=0#theta cordinate
+
+Mask = np.zeros_like(Rho)
+#print(Mask)
 for i in  np.arange(nx):
 	for j in np.arange(ny):
-		if -ud[0][i,j,0]>1 and r0[i]>80:
+		if (-ud[0][i,j,0]>1 and r0[i]>80):
 			Mask[i][j]=1	
 
 mass=0
@@ -1170,7 +1191,7 @@ masssolar=mass/MSUN
 print('{} kg'.format(masskg))
 print('{} MSUN'.format(masssolar))
 with open('wyniki.txt', 'a') as f:
-	print("for the file {} geodesic criterion && r>80:".format(name_of_file),file=f)
+	print("for the file {} geodesic criterion && r>100:".format(name_of_file),file=f)
 	print('{} MSUN'.format(masssolar),file=f)
 ##############
 
@@ -1178,6 +1199,7 @@ with open('wyniki.txt', 'a') as f:
 mass=0
 i=0
 j=0
+Mask = np.zeros_like(Rho)
 for i in  np.arange(nx):
 	for j in np.arange(ny):
 		if ud[0][i,j,0]*(1+ug[i,j]/rho[i,j]+pg[i,j]/rho_code[i,j])<-1:
@@ -1206,6 +1228,7 @@ with open('wyniki.txt', 'a') as f:
 mass=0
 i=0
 j=0
+Mask = np.zeros_like(Rho)
 for i in  np.arange(nx):
 	for j in np.arange(ny):
 		if ud[0][i,j,0]*(1+ug[i,j]/rho[i,j]+pg[i,j]/rho_code[i,j])<-1 and r0[i]>80:
@@ -1225,7 +1248,7 @@ masssolar=mass/MSUN
 print('{} kg'.format(masskg))
 print('{} MSUN'.format(masssolar))
 with open('wyniki.txt', 'a') as f:
-	print("for the file {} Bernoulli criterion version 1&& r>80:".format(name_of_file),file=f)
+	print("for the file {} Bernoulli criterion version 1&& r>100:".format(name_of_file),file=f)
 	print("{} MSUN\n".format(masssolar),file=f)
 
 ##############
@@ -1234,6 +1257,7 @@ mass=0
 
 i=0
 j=0
+Mask = np.zeros_like(Rho)
 for i in  np.arange(nx):
 	for j in np.arange(ny):
 		if ud[0][i,j,0]*(1+ug[i,j]/rho[i,j]+pg[i,j]/rho_code[i,j])*(0.9968 + 0.0085*Yee[i,j])<-1:
@@ -1260,6 +1284,7 @@ mass=0
 
 i=0
 j=0
+Mask = np.zeros_like(Rho)
 for i in  np.arange(nx):
 	for j in np.arange(ny):
 		if ud[0][i,j,0]*(1+ug[i,j]/rho[i,j]+pg[i,j]/rho_code[i,j])*(0.9968 + 0.0085*Yee[i,j])<-1 and r0[i]>80:
@@ -1279,6 +1304,6 @@ masssolar=mass/MSUN
 print('{} kg'.format(masskg))
 print('{} MSUN'.format(masssolar))
 with open('wyniki.txt', 'a') as f:
-	print("for the file {} Bernoulli criterion version 2&& r>80:".format(name_of_file),file=f)
+	print("for the file {} Bernoulli criterion version 2&& r>100:".format(name_of_file),file=f)
 	print("{} MSUN\n".format(masssolar),file=f)
 	print("#######################\n",file=f)
