@@ -22,7 +22,7 @@ import re
 
 
 #################
-name_of_file='dumps_for_energy'
+name_of_file='early_dumps'
 
 
 
@@ -50,7 +50,7 @@ energy_cold=[]
 #step=0
      
 #######################
-for step in np.arange(0,410,10):
+for step in np.arange(0,50,2):
 	t,nstep,rho,ug,vu,B,pg,divb,uu,ud,bu,bd,bsq,ktot,rhor,beta,Lambda_sim,P_dump,T_dump,Hd,Qnu,Tau,Yee = hrms.csfn_dumpread("dump%03d"%step,gam,nx,ny,nz,float_type,name_of_file)      
 	gd=hrms.gdet
 ########################
@@ -82,32 +82,33 @@ for step in np.arange(0,410,10):
 	P_UNIT = U_UNIT
 	SIM_UNIT = RHO_UNIT * CL * CL * CL / L_UNIT
 	# converting units:
-	rho = rho*RHO_UNIT
-	Lambda_sim = Lambda_sim*SIM_UNIT
-	Qnu = Qnu*SIM_UNIT   
+	#rho = rho*RHO_UNIT
+	#Lambda_sim = Lambda_sim*SIM_UNIT
+	#Qnu = Qnu*SIM_UNIT   
 #######################
 	#preparing data
 	r=np.array(r)
-	rho=np.reshape(rho,(nx,ny)) #I dont understand why but without transporing doesnt work
-	bsq=np.reshape(bsq,(nx,ny)) #I dont understand why but without transporing doesnt work
+	rho=np.reshape(rho,(nx,ny)) 
+	bsq=np.reshape(bsq,(nx,ny)) 
 	gd=np.reshape(gd,(nx,ny))
 	ug=np.reshape(ug,(nx,ny))
 	pg=np.reshape(pg,(nx,ny))
 	e_hot=np.divide(ug,rho)
 	k=0.0001
-	e_cold_up=k*np.power(rho,gam)
+	e_cold_up=k*np.power(rho,gam)#this are arrays
 	e_cold_down=(gam-1)*rho
 	e_cold=np.divide(e_cold_up,e_cold_down)
 	uth=rho*(e_hot-e_cold)
 	ub=1/2*bsq
 	ub_by_uth=np.divide(ub,uth) #result
-	Gdet = gd[:,:]
+	Gdet = gd[:,:] #this are slices of arrays
 	Rho=rho[:,:]
 	Ub=ub[:,:]
 	Uth=uth[:,:]
+	E_hot=e_hot[:,:]
 	E_cold=e_cold[:,:]
 	Ub_by_uth=ub_by_uth[:,:]
-##########
+########## #averaging
 	f_integrand_r = Rho*Gdet*2*np.pi
 	vol_r = scp_int.simps(f_integrand_r,dx=_dx1,axis=0)	        
 	f_integrand_theta = vol_r
@@ -118,7 +119,13 @@ for step in np.arange(0,410,10):
 	vol_r = scp_int.simps(f_integrand_r,dx=_dx1,axis=0)	        
 	f_integrand_theta = vol_r
 	vol_theta = scp_int.simps(f_integrand_theta,dx=_dx2,axis=0)	
-	e_avr_cold=vol_theta/volume	
+	e_avr_cold=vol_theta/volume
+##########
+	f_integrand_r = Rho*Gdet*2*np.pi*E_hot
+	vol_r = scp_int.simps(f_integrand_r,dx=_dx1,axis=0)	        
+	f_integrand_theta = vol_r
+	vol_theta = scp_int.simps(f_integrand_theta,dx=_dx2,axis=0)	
+	e_avr_hot=vol_theta/volume		
 ##########
 	f_integrand_r = Ub_by_uth*Gdet*2*np.pi*Rho
 	vol_r = scp_int.simps(f_integrand_r,dx=_dx1,axis=0)        
@@ -143,28 +150,39 @@ for step in np.arange(0,410,10):
 	print(t)
 	print(ub_avr)
 	print(uth_avr)
-	energy_cold.append(e_avr_cold)
+	energy_cold.append(e_avr_cold) #this are avaraged arrays 
+	energy_hot.append(e_avr_hot)
 	mag_field.append(ub_avr)
 	energy_thermal.append(uth_avr)
 	ratio.append(result)
 	ind_t.append(t)
 	ind_step.append(step)
+plt.plot(ind_step,energy_hot,'o')
+plt.title('step vs hot energy')
+plt.savefig('early_ step vs hot energy')
+#plt.show()
+plt.clf()
 plt.plot(ind_step,energy_cold,'o')
-plt.savefig('step vs cold energy')
-plt.show()
+plt.title('step vs cold energy')
+plt.savefig('early_ step vs cold energy')
+#plt.show()
 plt.clf()
 plt.plot(ind_step,energy_thermal,'o')
-plt.savefig('step vs thermal energy')
-plt.show()
+plt.title('step vs total thermal energy')
+plt.savefig('early_step vs total thermal energy')
+#plt.show()
 plt.clf()
 plt.plot(ind_step,mag_field,'o')
-plt.savefig('step vs magfield')
-plt.show()
+plt.title('step vs magfield energy')
+plt.savefig('early_ step vs magfield')
+#plt.show()
 plt.clf()
-plt.plot(ind_t,ratio,'o')
-plt.show()
-plt.savefig('time vs energies ratio')
-plt.clf()
+#plt.plot(ind_t,ratio,'o')
+#plt.show()
+#plt.savefig('time vs energies ratio_early')
+#plt.clf()
 plt.plot(ind_step,ratio,'o')
-plt.savefig('step vs energies ratio')
-plt.show()
+plt.title('step vs ratio of ub by uth')
+plt.savefig('early_ step vs energies ratio')
+plt.clf
+#plt.show()
