@@ -43,10 +43,12 @@ nx,ny,nz,r,h,ph,_dx1,_dx2,_dx3,a,gam,Rin,Rout,hslope,R0,x1,x2,x3,float_type=hrms
 ratio=[]
 ind_t=[]
 ind_step=[]
-mag_field=[]
+mag_field=[]#this is not specific 
 energy_hot=[]
 energy_thermal=[]
 energy_cold=[]
+u_thermal=[]#this is not specific 
+mag_field_specific=[]
 #step=0
      
 #######################
@@ -98,15 +100,19 @@ for step in np.arange(0,50,2):
 	e_cold_up=k*np.power(rho,gam)#this are arrays
 	e_cold_down=(gam-1)*rho
 	e_cold=np.divide(e_cold_up,e_cold_down)
-	uth=rho*(e_hot-e_cold)
+	e_th=e_hot-e_cold
+	u_th=rho*e_th
 	ub=1/2*bsq
-	ub_by_uth=np.divide(ub,uth) #result
+	e_b=np.divide(ub,rho)
+	ub_by_uth=np.divide(ub,u_th) #result
 	Gdet = gd[:,:] #this are slices of arrays
 	Rho=rho[:,:]
 	Ub=ub[:,:]
-	Uth=uth[:,:]
+	E_th=e_th[:,:]
 	E_hot=e_hot[:,:]
 	E_cold=e_cold[:,:]
+	E_b=e_b[:,:]
+	U_th=u_th[:,:]
 	Ub_by_uth=ub_by_uth[:,:]
 ########## #averaging
 	f_integrand_r = Rho*Gdet*2*np.pi
@@ -139,50 +145,129 @@ for step in np.arange(0,50,2):
 	vol_theta = scp_int.simps(f_integrand_theta,dx=_dx2,axis=0)	
 	ub_avr=vol_theta/volume
 ##########
-	f_integrand_r = Rho*Gdet*2*np.pi*Uth
+	f_integrand_r = Rho*Gdet*2*np.pi*E_th
 	vol_r = scp_int.simps(f_integrand_r,dx=_dx1,axis=0)	        
 	f_integrand_theta = vol_r
 	vol_theta = scp_int.simps(f_integrand_theta,dx=_dx2,axis=0)	
-	uth_avr=vol_theta/volume	
+	E_th_avr=vol_theta/volume
+##########
+	#f_integrand_r = Rho*Gdet*2*np.pi*U_th
+	#vol_r = scp_int.simps(f_integrand_r,dx=_dx1,axis=0)	        
+	#f_integrand_theta = vol_r
+	#vol_theta = scp_int.simps(f_integrand_theta,dx=_dx2,axis=0)	
+	#U_th_avr=vol_theta/volume
+##########
+	f_integrand_r = Rho*Gdet*2*np.pi*E_b
+	vol_r = scp_int.simps(f_integrand_r,dx=_dx1,axis=0)	        
+	f_integrand_theta = vol_r
+	vol_theta = scp_int.simps(f_integrand_theta,dx=_dx2,axis=0)	
+	E_b_avr=vol_theta/volume		
 ##########
 	result=avr_up/volume
 	print(result)
 	print(t)
 	print(ub_avr)
-	print(uth_avr)
+	print(E_th_avr)
+	#u_thermal.append(U_th_avr)
+	mag_field_specific.append(E_b_avr)
 	energy_cold.append(e_avr_cold) #this are avaraged arrays 
 	energy_hot.append(e_avr_hot)
 	mag_field.append(ub_avr)
-	energy_thermal.append(uth_avr)
+	energy_thermal.append(E_th_avr)
 	ratio.append(result)
 	ind_t.append(t)
-	ind_step.append(step)
-plt.plot(ind_step,energy_hot,'o')
-plt.title('step vs hot energy')
-plt.savefig('early_ step vs hot energy')
+	ind_step.append(nstep)
+print(ind_t)
+plt.figure(figsize=(12,8))
+plt.plot(ind_t,energy_thermal,'b.')
+plt.plot(ind_t,energy_thermal,'b')
+plt.plot(ind_t,mag_field_specific,'r.')
+plt.plot(ind_t,mag_field_specific,'r')
+plt.title('time vs specific mag field && thermal energy')
+plt.xlabel('time')
+plt.ylabel('total mag field && thermal energy')
+plt.savefig('early_ time vs specific mag field and thermal energy')
 #plt.show()
 plt.clf()
-plt.plot(ind_step,energy_cold,'o')
-plt.title('step vs cold energy')
-plt.savefig('early_ step vs cold energy')
+#plt.plot(ind_t,u_thermal,'b.')
+#plt.plot(ind_t,u_thermal,'b')
+#plt.plot(ind_t,mag_field,'r.')
+#plt.plot(ind_t,mag_field,'r')
+#plt.title('time vs mag field && thermal energy')
+#plt.xlabel('time')
+#plt.ylabel('total mag field && thermal energy')
+#plt.savefig('early_ time vs mag field and thermal energy')
+#plt.show()
+#plt.clf()
+plt.plot(ind_t,energy_hot,'b.')
+plt.plot(ind_t,energy_hot,'b')
+plt.title('time vs hot energy')
+plt.xlabel('time')
+plt.ylabel('total internal energy')
+plt.savefig('early_ time vs hot energy')
 #plt.show()
 plt.clf()
-plt.plot(ind_step,energy_thermal,'o')
-plt.title('step vs total thermal energy')
-plt.savefig('early_step vs total thermal energy')
+plt.plot(ind_t,energy_cold,'b.')
+plt.plot(ind_t,energy_cold,'b')
+plt.title('time vs cold energy')
+plt.xlabel('time')
+plt.ylabel('cold energy')
+plt.savefig('early_ time vs cold energy')
 #plt.show()
 plt.clf()
-plt.plot(ind_step,mag_field,'o')
-plt.title('step vs magfield energy')
-plt.savefig('early_ step vs magfield')
+################
+plt.plot(ind_t,np.log10(energy_thermal),'b.',)
+plt.plot(ind_t,np.log10(energy_cold),'g.')
+plt.plot(ind_t,np.log10(energy_hot),'r.')
+plt.plot(ind_t,np.log10(energy_thermal),'b')
+plt.plot(ind_t,np.log10(energy_cold),'g')
+plt.plot(ind_t,np.log10(energy_hot),'r')
+plt.xlabel('time')
+plt.ylabel('log10 of energy')
+plt.title('time vs log of multiple energies energy')
+plt.savefig('early time vs log_energies')
 #plt.show()
 plt.clf()
-#plt.plot(ind_t,ratio,'o')
+################
+plt.plot(ind_t,energy_thermal,'b.')
+plt.plot(ind_t,energy_cold,'g.')
+plt.plot(ind_t,energy_hot,'r.')
+plt.plot(ind_t,energy_thermal,'b')
+plt.plot(ind_t,energy_cold,'g')
+plt.plot(ind_t,energy_hot,'r')
+plt.xlabel('time')
+plt.ylabel('energy')
+plt.title('time vs multiple energies energy')
+plt.savefig('early time vs energies')
+#plt.show()
+plt.clf()
+################
+plt.plot(ind_t,energy_thermal,'b.')
+plt.plot(ind_t,energy_thermal,'b')
+plt.xlabel('time')
+plt.ylabel('total thermal energy')
+plt.title('time vs total thermal energy')
+plt.savefig('early time vs total thermal energy')
+#plt.show()
+plt.clf()
+plt.plot(ind_t,mag_field,'b.')
+plt.plot(ind_t,mag_field,'b')
+plt.xlabel('time')
+plt.ylabel('total magnetic field energy')
+plt.title('time vs magfield energy')
+plt.savefig('early_ time vs magfield')
+#plt.show()
+plt.clf()
+#plt.plot(ind_t,ratio,".")
 #plt.show()
 #plt.savefig('time vs energies ratio_early')
 #plt.clf()
-plt.plot(ind_step,ratio,'o')
-plt.title('step vs ratio of ub by uth')
-plt.savefig('early_ step vs energies ratio')
+plt.plot(ind_t,ratio,'b.')
+plt.plot(ind_t,ratio,'b')
+plt.xlabel('time')
+plt.ylabel('ub by uth ratio')
+plt.title('time vs ratio of ub by uth')
+plt.savefig('early_ time vs energies ratio')
 plt.clf
+plt.close()
 #plt.show()
