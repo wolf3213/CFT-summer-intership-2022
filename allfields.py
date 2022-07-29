@@ -271,11 +271,11 @@ for step in np.arange(60,410,10):
 	vol_theta = scp_int.simps(f_integrand_theta,dx=_dx2,axis=0)	
 	e_avr_hot=vol_theta/volume		
 ##########
-	f_integrand_r = Ub_by_uth*2*np.pi*Rho*Gdet
-	vol_r = scp_int.simps(f_integrand_r,dx=_dx1,axis=0)        
-	f_integrand_theta = vol_r
-	vol_theta = scp_int.simps(f_integrand_theta,dx=_dx2,axis=0)	 	
-	avr_up = vol_theta #avaraged ratio
+	#f_integrand_r = Ub_by_uth*2*np.pi*Rho*Gdet
+	#vol_r = scp_int.simps(f_integrand_r,dx=_dx1,axis=0)        
+	#f_integrand_theta = vol_r
+	#vol_theta = scp_int.simps(f_integrand_theta,dx=_dx2,axis=0)	 	
+	#avr_up = vol_theta #avaraged ratio
 ##########
 	f_integrand_r = Eb_by_eth*Gdet*2*np.pi*Rho
 	vol_r = scp_int.simps(f_integrand_r,dx=_dx1,axis=0)        
@@ -307,7 +307,7 @@ for step in np.arange(60,410,10):
 	vol_theta = scp_int.simps(f_integrand_theta,dx=_dx2,axis=0)	
 	E_b_avr=vol_theta/volume		
 ##########
-	result=avr_up/volume
+	#result=avr_up/volume
 	print(result)
 	print(t)
 	print(ub_avr)
@@ -318,7 +318,7 @@ for step in np.arange(60,410,10):
 	energy_hot.append(e_avr_hot)
 	#mag_field.append(ub_avr)
 	energy_thermal.append(E_th_avr)
-	ratio.append(result)
+	#ratio.append(result)
 	ind_t.append(t)
 	ind_step.append(nstep)
 	ratio_specific_array.append(ratio_spefic_avr)
@@ -398,6 +398,23 @@ plt.savefig('all time vs log_energies')
 #plt.show()
 plt.clf()
 ################
+plt.plot(ind_t,np.log10(energy_thermal),'b.')
+plt.plot(ind_t,np.log10(energy_cold),'g.')
+plt.plot(ind_t,np.log10(energy_hot),'r.')
+plt.plot(ind_t,np.log10(mag_field_specific),'k.')
+plt.plot(ind_t,np.log10(energy_thermal),'b',label='thermal energy')
+plt.plot(ind_t,np.log10(energy_cold),'g',label='cold energy')
+plt.plot(ind_t,np.log10(energy_hot),'r',label='internal energy')
+plt.plot(ind_t,np.log10(mag_field_specific),'k',label='magnetic energy')
+plt.grid(True)
+plt.legend()
+plt.xlabel('time')
+plt.ylabel('log10 of energy')
+plt.title('time vs log of multiple energies')
+plt.savefig('all time vs log_energies')
+#plt.show()
+plt.clf()
+################
 plt.plot(ind_t,energy_thermal,'b.')
 plt.plot(ind_t,energy_cold,'g.')
 plt.plot(ind_t,energy_hot,'r.')
@@ -408,8 +425,8 @@ plt.legend()
 plt.grid(True)
 plt.xlabel('time')
 plt.ylabel('energy')
-plt.title('time vs multiple energies energy')
-plt.savefig('all time vs energies')
+plt.title('time vs multiple energies energy wo mag')
+plt.savefig('all time vs energies wo mag')
 #plt.show()
 plt.clf()
 ################
@@ -448,14 +465,14 @@ plt.clf()
 #plt.clf()
 
 ############
-plt.plot(ind_t,ratio,'b.')
-plt.plot(ind_t,ratio,'b')
-plt.xlabel('time')
-plt.ylabel('ub by uth ratio')
-plt.title('time vs ratio of ub by uth')
-plt.grid(True)
-plt.savefig('all time vs energies ratio')
-plt.clf()
+#plt.plot(ind_t,ratio,'b.')
+#plt.plot(ind_t,ratio,'b')
+#plt.xlabel('time')
+#plt.ylabel('ub by uth ratio')
+#plt.title('time vs ratio of ub by uth')
+#plt.grid(True)
+#plt.savefig('all time vs energies ratio')
+#plt.clf()
 ############
 plt.plot(ind_t,ratio_after_avarage,'b.')
 plt.plot(ind_t,ratio_after_avarage,'b')
@@ -472,16 +489,16 @@ plt.xlabel('time')
 plt.ylabel('<ub> by <uth> ratio')
 plt.title('time vs ratio of log( <ub> by <uth>) ')
 plt.grid(True)
-plt.savefig('all time vs  ratio of log averaged energies')
+plt.savefig('all time vs  ratio of log of averaged energies')
 plt.clf()
 ################
-plt.plot(ind_t,ratio_specific_array,'b.')
-plt.plot(ind_t,ratio_specific_array,'b')
-plt.xlabel('time')
-plt.ylabel('eb by eth ratio')
-plt.title('time vs ratio of eb by eth (specific energies ratio)')
-plt.grid(True)
-plt.savefig('all time vs specfic energies ratio')
-plt.clf()
+#plt.plot(ind_t,ratio_specific_array,'b.')
+#plt.plot(ind_t,ratio_specific_array,'b')
+#plt.xlabel('time')
+#plt.ylabel('eb by eth ratio')
+#plt.title('time vs ratio of eb by eth (specific energies ratio)')
+#plt.grid(True)
+#plt.savefig('all time vs specfic energies ratio')
+#plt.clf()
 plt.close()
 #plt.show()
